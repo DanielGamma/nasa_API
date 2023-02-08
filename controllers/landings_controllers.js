@@ -1,6 +1,7 @@
 const Landing = require('../models/landings_models');
 const { getAll, getByName, getNumberOfDocuments, getPaginatedLandings } = require('../services/landings_services');
 const { validateNumber, validateLandingDocument } = require('../utils/validations');
+const { backup } = require("../utils/backup.js")
 // const { CustomError } = require('../utils/errors');
 
 const getAllLandings = async (req, res, next) => {
@@ -88,10 +89,22 @@ const deleteLanding = async (req, res, next) => {
     }
 }
 
+const resetLanding = async (req, res, next) => {
+    try {
+        const clearLanding = await Landing.deleteMany({});
+        const landing = await Landing.insertMany(backup);
+        res.status(201).json({ response: true, landing });
+    }
+    catch (error) {
+        console.log(error)
+    }
+}
+
 module.exports = {
     getAllLandings,
     getLandingsByName,
     createLanding,
     editLanding,
-    deleteLanding
+    deleteLanding,
+    resetLanding
 }
