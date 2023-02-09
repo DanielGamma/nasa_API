@@ -1,5 +1,5 @@
 const Landing = require('../models/landings_models');
-const { getAll, getByName, getNumberOfDocuments, getPaginatedLandings } = require('../services/landings_services');
+const { getAll, getByName, getById, getNumberOfDocuments, getPaginatedLandings } = require('../services/landings_services');
 const { validateNumber, validateLandingDocument } = require('../utils/validations');
 // const { CustomError } = require('../utils/errors');
 
@@ -37,6 +37,19 @@ const getLandingsByName = async (req, res, next) => {
         res.status(200).json({ response: true, count: landings.length, landings });
     }
     catch (error) {
+        console.log(error);
+    }
+}
+
+const getLandingsById = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const landings = await getById(id);
+        if (!landings || landings.length < 1) {
+            return res.status(400).json({ response: false, message: 'No landings with such parameters' });
+        }
+        res.status(200).json({ response: true, count: landings.length, landings });
+    } catch (error) {
         console.log(error);
     }
 }
@@ -91,6 +104,7 @@ const deleteLanding = async (req, res, next) => {
 module.exports = {
     getAllLandings,
     getLandingsByName,
+    getLandingsById,
     createLanding,
     editLanding,
     deleteLanding

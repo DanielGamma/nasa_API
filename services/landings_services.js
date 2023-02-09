@@ -23,6 +23,15 @@ const getByName = async (name) => {
     }
 }
 
+const getById = async (id) => {
+    try {
+        const landings = await Landing.find({ id: id });
+        return landings
+    } catch (error) {
+        return error
+    }
+}
+
 const getNumberOfDocuments = async () => {
     try {
         const count = await Landing.countDocuments({});
@@ -45,6 +54,7 @@ const getPaginatedLandings = async (field, order, page) => {
 module.exports = {
     getAll,
     getByName,
+    getById,
     getNumberOfDocuments,
     getPaginatedLandings
 }
